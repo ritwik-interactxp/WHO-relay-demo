@@ -4665,3 +4665,17 @@ div#vmap {
 	}
 }
 /*-- //responsive --*/
+/* ── Relay scroll fix ─────────────────────────────────────────────── */
+html, body {
+  overflow-y: auto !important;
+  height: auto !important;
+}
+.title-bar, section.title-bar {
+  overflow: visible !important;
+  height: auto !important;
+  min-height: 100vh;
+}
+.grids {
+  overflow: visible !important;
+  height: auto !important;
+}
