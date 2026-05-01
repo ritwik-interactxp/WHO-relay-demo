@@ -14,179 +14,79 @@
 <script src="js/bootstrap.js"></script>
 <script src="js/app.js"></script>
 <style>
-  .relay-topbar {
-    background: #1a1a2e;
-    color: #00d4ff;
-    text-align: center;
-    padding: 6px;
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: 1px;
+  section.title-bar {
+    position: fixed !important;
+    top: 0 !important;
+    left: 60px !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    background: white;
   }
-  .relay-topbar span { color: white; font-weight: 400; }
-  .demo-home {
-    text-align: center;
-    padding: 60px 20px 20px;
+  .home-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 20px;
   }
-  .demo-home h2 {
-    font-size: 40px;
+  .welcome-box {
+    text-align: center;
+    border: 1px solid #e0e0e0;
+    border-radius: 2px;
+    padding: 60px 100px;
+    max-width: 860px;
+    width: 100%;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+  }
+  .welcome-box h1 {
+    font-size: 38px;
     color: #009CDE;
     font-weight: 700;
     margin-bottom: 8px;
   }
-  .demo-home .subtitle {
-    font-size: 15px;
+  .welcome-box .subtitle {
+    font-size: 14px;
     color: tomato;
     font-weight: 600;
-    margin-bottom: 40px;
+    margin-bottom: 48px;
   }
-  .relay-card-grid {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 18px;
-    justify-content: center;
-    max-width: 900px;
-    margin: 0 auto 40px;
-  }
-  .relay-card {
-    background: white;
-    border-radius: 10px;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
-    padding: 28px 32px;
-    width: 230px;
-    text-align: center;
-    cursor: pointer;
-    border-top: 4px solid #009CDE;
-    transition: transform 0.15s, box-shadow 0.15s;
-    text-decoration: none;
-    display: block;
-  }
-  .relay-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 24px rgba(0,0,0,0.13);
-    text-decoration: none;
-  }
-  .relay-card i {
-    font-size: 36px;
+  .welcome-box .greeting {
+    font-size: 15px;
     color: #009CDE;
-    margin-bottom: 12px;
-    display: block;
+    margin-bottom: 0;
   }
-  .relay-card h4 {
-    color: #333;
-    font-size: 14px;
-    font-weight: 700;
-    margin-bottom: 6px;
-  }
-  .relay-card p {
-    color: #888;
-    font-size: 12px;
-  }
-  .relay-card.red  { border-top-color: #e74c3c; } .relay-card.red i { color: #e74c3c; }
-  .relay-card.blue { border-top-color: #2980b9; } .relay-card.blue i { color: #2980b9; }
-  .relay-card.green{ border-top-color: #27ae60; } .relay-card.green i { color: #27ae60; }
-  .relay-card.orange{ border-top-color: #e67e22; } .relay-card.orange i { color: #e67e22; }
-  .relay-card.purple{ border-top-color: #8e44ad; } .relay-card.purple i { color: #8e44ad; }
-
-  .demo-banner {
-    background:#fff3cd;
-    border:2px solid #ffc107;
-    border-radius:6px;
-    padding:10px 18px;
-    margin: 0 auto 24px;
-    max-width: 720px;
-    display:flex;
-    align-items:center;
-    gap:10px;
-  }
-  .demo-banner span { font-size:13px;color:#856404;font-weight:600; }
-  .hr-line { border-top: 2px solid #009CDE; max-width: 800px; margin: 0 auto 16px; }
-  .footer-bar {
+  .home-hr { border: none; border-top: 1px solid #009CDE; margin: 48px 0 10px; }
+  .home-footer {
     display: flex;
     justify-content: space-between;
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 0 16px;
+    font-size: 12px;
+    color: #009CDE;
   }
-  .footer-bar span { color: #009CDE; font-size: 13px; }
 </style>
 </head>
 <body class="dashboard-page">
-  <div class="relay-topbar">🔁 RELAY ENTERPRISE &nbsp;<span>| WHO India NPSU Demo Instance</span></div>
+<nav class="main-menu"><ul></ul></nav>
 
-  <nav class="main-menu"><ul></ul></nav>
-
-  <section class="title-bar">
-    <div class="grids">
-      <div class="panel panel-widget forms-panel">
-        <div class="forms">
-          <div class="form-grids form-grids-right">
-            <div class="widget-shadow" data-example-id="basic-forms">
-              <div class="form-body">
-
-                <div class="demo-home">
-                  <h2>Welcome to WIN-IMM</h2>
-                  <p class="subtitle">WHO India NPSU Information Management Module</p>
-
-                  <div class="demo-banner">
-                    <span style="font-size:20px;">⚠️</span>
-                    <span>RELAY ENTERPRISE DEMO — All figures shown are <u>simulated/fake</u> for demonstration purposes only. Not real WHO data.</span>
-                  </div>
-
-                  <div class="relay-card-grid">
-                    <a class="relay-card red" href="dashboards/fr-surveillance.html">
-                      <i class="fa fa-binoculars"></i>
-                      <h4>FR Surveillance</h4>
-                      <p>Measles & Rubella epi-curve, state breakdown</p>
-                    </a>
-                    <a class="relay-card green" href="dashboards/afp.html">
-                      <i class="fa fa-child"></i>
-                      <h4>AFP Surveillance</h4>
-                      <p>Acute Flaccid Paralysis 2020-25, NPAFP rates</p>
-                    </a>
-                    <a class="relay-card orange" href="dashboards/hmis.html">
-                      <i class="fa fa-syringe"></i>
-                      <h4>HMIS Dashboard</h4>
-                      <p>Full immunization coverage, vaccine dropout</p>
-                    </a>
-                    <a class="relay-card blue" href="dashboards/covid.html">
-                      <i class="fa fa-medkit"></i>
-                      <h4>COVID — National</h4>
-                      <p>Daily cases, deaths, CFR, state breakdown</p>
-                    </a>
-                    <a class="relay-card purple" href="dashboards/fr-training.html">
-                      <i class="fa fa-graduation-cap"></i>
-                      <h4>FR Training</h4>
-                      <p>Workshop coverage, participants trained</p>
-                    </a>
-                  </div>
-
-                  <div class="hr-line"></div>
-                  <div class="footer-bar">
-                    <span>Developed by WCO - NPSN India | Data Team | <strong>Relay Enterprise</strong></span>
-                    <span>Version : 4.7 | Published on 15/02/2024</span>
-                  </div>
-                </div>
-
-              </div>
-            </div>
-          </div>
-        </div>
+<section class="title-bar">
+  <div class="home-wrap">
+    <div class="welcome-box">
+      <h1>Welcome to WIN-IMM</h1>
+      <p class="subtitle">WHO India NPSU Information Management Module</p>
+      <p class="greeting">Hello Demo User</p>
+      <hr class="home-hr">
+      <div class="home-footer">
+        <span>Developed by WCO - NPSN India | Data Team</span>
+        <span>Version : 4.7 | Published on 15/02/2024</span>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <script src="js/proton.js"></script>
-  <script>
-    $(function() { renderSidebar('home'); });
-  </script>
+<script src="js/proton.js"></script>
 <script>
-$(document).off("touchmove");
-$(document).on("touchmove", function(e){ e.stopPropagation(); });
-document.body.style.overflow = "auto";
-document.body.style.height = "auto";
-document.documentElement.style.overflow = "auto";
-document.documentElement.style.height = "auto";
+  $(function() { renderSidebar('home'); });
 </script>
 </body>
 </html>
