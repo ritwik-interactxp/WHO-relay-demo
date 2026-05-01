@@ -237,6 +237,8 @@ body a:hover{
 			right: 0;
 			bottom: 0;
 			padding: 0;
+			overflow-y: scroll;
+			-webkit-overflow-scrolling: touch;
 			-webkit-transition: left .1s ease-in;
 			transition: left .1s ease-in;
 		}
@@ -252,9 +254,8 @@ body a:hover{
 	.styled-scrollbar::-webkit-scrollbar-track{background-color:none}
 	@media(min-width:480px){
 		nav.main-menu{
-		    position: absolute;
+		    position: relative;
 			top: 0;
-			bottom: 0;
 			height: 100%;
 			left: 0;
 			width: 60px;
@@ -279,7 +280,7 @@ body a:hover{
 			transition: all .1s linear;
 		}
 		nav.main-menu li ul{
-		    position: absolute;
+		    position: relative;
 			display: inline-block;
 			background: #00bcd4;
 			top: 0;
@@ -607,7 +608,7 @@ ul.dropdown-menu li {
 	-o-border-radius:2em;	
 	text-align:center;
 	display: inline-block;
-	position: absolute;
+	position: relative;
 	top: -3px;
 	right: -10px;
 }
@@ -648,7 +649,7 @@ i.fa.fa-tasks{
     height: 20px;
     text-align: center;
     display: inline-block;
-    position: absolute;
+    position: relative;
     top: 6%;
     padding: 2px 0 0 0;
 }
@@ -1377,7 +1378,6 @@ code {
 /*-- color-variations --*/
 .button-states-top-grid{
     position: relative;
-    margin-bottom: 0;
     background-color: #fff;
     padding: 28px 32px;
     border: 10px solid #d8d8d8;
@@ -1385,7 +1385,6 @@ code {
 }
 .button-sizes{
     position: relative;
-    margin-bottom: 0;
     background-color: #fff;
     padding: 28px 32px;
     border: 10px solid #d8d8d8;
@@ -1421,7 +1420,6 @@ code {
 }
 .btn {
     display: inline-block;
-    margin-bottom: 0;
     font-weight: 700;
     text-align: center;
     vertical-align: middle;
@@ -1470,7 +1468,7 @@ code {
     border-color: rgba(0, 0, 0, 0.05);
 }
 #source-button {
-    position: absolute;
+    position: relative;
     top: 0;
     right: 0;
     z-index: 100;
@@ -1534,7 +1532,6 @@ a.button,a.button2{
   -webkit-tap-highlight-color: rgba(0,0,0,0);
 }
 .hover-buttons {
-    margin-bottom: 0;
     background-color: #fff;
     padding: 28px 32px;
     border: 10px solid #d8d8d8;
@@ -1647,7 +1644,7 @@ ul.bt-list li a {
 }
 .hvr-icon-back:before {
   content: "\f137";
-  position: absolute;
+  position: relative;
   left: 1em;
   padding: 0 1px;
   font-family: FontAwesome;
@@ -1682,7 +1679,7 @@ ul.bt-list li a {
 }
 .hvr-icon-forward:before {
   content: "\f138";
-  position: absolute;
+  position: relative;
   right: 1em;
   padding: 0 1px;
   font-family: FontAwesome;
@@ -1746,7 +1743,7 @@ ul.bt-list li a {
 }
 .hvr-icon-down:before {
   content: "\f01a";
-  position: absolute;
+  position: relative;
   right: 1em;
   padding: 0 1px;
   font-family: FontAwesome;
@@ -1808,7 +1805,7 @@ ul.bt-list li a {
 }
 .hvr-icon-up:before {
   content: "\f01b";
-  position: absolute;
+  position: relative;
   right: 1em;
   padding: 0 1px;
   font-family: FontAwesome;
@@ -1839,7 +1836,7 @@ ul.bt-list li a {
 }
 .hvr-icon-spin:before {
   content: "\f021";
-  position: absolute;
+  position: relative;
   right: 1em;
   padding: 0 1px;
   font-family: FontAwesome;
@@ -1905,7 +1902,7 @@ ul.bt-list li a {
 }
 .hvr-icon-drop:before {
   content: "\f041";
-  position: absolute;
+  position: relative;
   right: 1em;
   opacity: 1;
   padding: 0 1px;
@@ -1946,7 +1943,7 @@ ul.bt-list li a {
 }
 .hvr-icon-fade:before {
   content: "\f00c";
-  position: absolute;
+  position: relative;
   right: 1em;
   padding: 0 1px;
   font-family: FontAwesome;
@@ -2001,7 +1998,7 @@ ul.bt-list li a {
 }
 .hvr-icon-float-away:before, .hvr-icon-float-away:after {
   content: "\f055";
-  position: absolute;
+  position: relative;
   right: 1em;
   padding: 0 1px;
   font-family: FontAwesome;
@@ -2060,7 +2057,7 @@ ul.bt-list li a {
 }
 .hvr-icon-sink-away:before, .hvr-icon-sink-away:after {
   content: "\f056";
-  position: absolute;
+  position: relative;
   right: 1em;
   padding: 0 1px;
   font-family: FontAwesome;
@@ -2098,7 +2095,7 @@ ul.bt-list li a {
 }
 .hvr-icon-grow:before {
   content: "\f118";
-  position: absolute;
+  position: relative;
   right: 1em;
   padding: 0 1px;
   font-family: FontAwesome;
@@ -2133,7 +2130,7 @@ ul.bt-list li a {
 }
 .hvr-icon-shrink:before {
   content: "\f119";
-  position: absolute;
+  position: relative;
   right: 1em;
   padding: 0 1px;
   font-family: FontAwesome;
@@ -2190,7 +2187,7 @@ ul.bt-list li a {
 }
 .hvr-icon-pulse:before {
   content: "\f015";
-  position: absolute;
+  position: relative;
   right: 1em;
   padding: 0 1px;
   font-family: FontAwesome;
@@ -2239,7 +2236,7 @@ ul.bt-list li a {
 }
 .hvr-icon-pulse-grow:before {
   content: "\f015";
-  position: absolute;
+  position: relative;
   right: 1em;
   padding: 0 1px;
   font-family: FontAwesome;
@@ -2290,7 +2287,7 @@ ul.bt-list li a {
 }
 .hvr-icon-pulse-shrink:before {
   content: "\f015";
-  position: absolute;
+  position: relative;
   right: 1em;
   padding: 0 1px;
   font-family: FontAwesome;
@@ -2343,7 +2340,7 @@ ul.bt-list li a {
 }
 .hvr-icon-push:before {
   content: "\f006";
-  position: absolute;
+  position: relative;
   right: 1em;
   padding: 0 1px;
   font-family: FontAwesome;
@@ -2398,7 +2395,7 @@ ul.bt-list li a {
 }
 .hvr-icon-pop:before {
   content: "\f005";
-  position: absolute;
+  position: relative;
   right: 1em;
   padding: 0 1px;
   font-family: FontAwesome;
@@ -2439,7 +2436,7 @@ ul.bt-list li a {
 }
 .hvr-icon-bounce:before {
   content: "\f087";
-  position: absolute;
+  position: relative;
   right: 1em;
   padding: 0 1px;
   font-family: FontAwesome;
@@ -2476,7 +2473,7 @@ ul.bt-list li a {
 }
 .hvr-icon-rotate:before {
   content: "\f0c6";
-  position: absolute;
+  position: relative;
   right: 1em;
   padding: 0 1px;
   font-family: FontAwesome;
@@ -2511,7 +2508,7 @@ ul.bt-list li a {
 }
 .hvr-icon-grow-rotate:before {
   content: "\f095";
-  position: absolute;
+  position: relative;
   right: 1em;
   padding: 0 1px;
   font-family: FontAwesome;
@@ -2546,7 +2543,7 @@ ul.bt-list li a {
 }
 .hvr-icon-float:before {
   content: "\f01b";
-  position: absolute;
+  position: relative;
   right: 1em;
   padding: 0 1px;
   font-family: FontAwesome;
@@ -2581,7 +2578,7 @@ ul.bt-list li a {
 }
 .hvr-icon-sink:before {
   content: "\f01a";
-  position: absolute;
+  position: relative;
   right: 1em;
   padding: 0 1px;
   font-family: FontAwesome;
@@ -2664,7 +2661,7 @@ ul.bt-list li a {
 }
 .hvr-icon-bob:before {
   content: "\f077";
-  position: absolute;
+  position: relative;
   right: 1em;
   padding: 0 1px;
   font-family: FontAwesome;
@@ -2753,7 +2750,7 @@ ul.bt-list li a {
 }
 .hvr-icon-hang:before {
   content: "\f078";
-  position: absolute;
+  position: relative;
   right: 1em;
   padding: 0 1px;
   font-family: FontAwesome;
@@ -2858,7 +2855,7 @@ ul.bt-list li a {
 }
 .hvr-icon-wobble-horizontal:before {
   content: "\f061";
-  position: absolute;
+  position: relative;
   right: 1em;
   padding: 0 1px;
   font-family: FontAwesome;
@@ -2957,7 +2954,7 @@ ul.bt-list li a {
 }
 .hvr-icon-wobble-vertical:before {
   content: "\f062";
-  position: absolute;
+  position: relative;
   right: 1em;
   padding: 0 1px;
   font-family: FontAwesome;
@@ -3016,7 +3013,7 @@ ul.bt-list li a {
 }
 .hvr-icon-buzz:before {
   content: "\f017";
-  position: absolute;
+  position: relative;
   right: 1em;
   padding: 0 1px;
   font-family: FontAwesome;
@@ -3155,7 +3152,7 @@ ul.bt-list li a {
 }
 .hvr-icon-buzz-out:before {
   content: "\f023";
-  position: absolute;
+  position: relative;
   right: 1em;
   padding: 0 1px;
   font-family: FontAwesome;
@@ -3262,7 +3259,6 @@ code {
     margin: 0;
 }
 .bottom .form-group {
-    margin-bottom: 0;
 }
 .form-group.has-feedback {
     margin-bottom: 15px !important;
@@ -3365,7 +3361,7 @@ button.note-color-btn {
   float: right;
 }
 .input-icon > i, .input-icon .icon {
-  position: absolute;
+  position: relative;
   display: block;
   margin: 10px 8px;
   line-height: 14px;
@@ -3469,7 +3465,7 @@ button.note-color-btn {
 .agileits-caption {
 	background: rgba(0, 0, 0, 0.62);
     padding: 1em;
-    position: absolute;
+    position: relative;
     left: 0;
     bottom: -105%;
     text-align: center;
@@ -3776,7 +3772,7 @@ div#vmap {
 
 #geocomplete { 
     width: 200px;
-    position: absolute;
+    position: relative;
     z-index: 999;
     top: 10%;
     right: 8%;
@@ -4144,7 +4140,6 @@ div#vmap {
 	}
 	.agile-last-right {
 		padding: 0!important;
-		margin-bottom: 0;
 	}
 	.panel-body .col-adjust-8 > .row > div {
 		float: left;
