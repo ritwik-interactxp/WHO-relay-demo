@@ -237,8 +237,6 @@ body a:hover{
 			right: 0;
 			bottom: 0;
 			padding: 0;
-			overflow-y: scroll;
-			-webkit-overflow-scrolling: touch;
 			-webkit-transition: left .1s ease-in;
 			transition: left .1s ease-in;
 		}
@@ -4660,17 +4658,16 @@ div#vmap {
 	}
 }
 /*-- //responsive --*/
-/* ── Relay scroll fix ─────────────────────────────────────────────── */
-html, body {
-  overflow-y: auto !important;
-  height: auto !important;
+/* ── Relay scroll fix ── */
+.wrapper {
+  overflow-y: scroll !important;
+  -webkit-overflow-scrolling: touch !important;
 }
-.title-bar, section.title-bar {
-  overflow: visible !important;
+.title-bar {
   height: auto !important;
-  min-height: 100vh;
+  min-height: 100% !important;
 }
-.grids {
-  overflow: visible !important;
+.grids, .forms, .form-grids, .widget-shadow, .form-body {
   height: auto !important;
+  min-height: 200px;
 }
