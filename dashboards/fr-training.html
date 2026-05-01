@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<head>
+<title>FR Training — WHO Relay Demo</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="../css/bootstrap.css">
+<link href="../css/style.css" rel="stylesheet"/>
+<link href="../css/font.css" rel="stylesheet"/>
+<link href="../css/font-awesome.css" rel="stylesheet">
+<link rel="stylesheet" href="../css/dataTables.bootstrap.min.css">
+<script src="../js/jquery2.0.3.min.js"></script>
+<script src="../js/modernizr.js"></script>
+<script src="../js/jquery.cookie.js"></script>
+<script src="../js/bootstrap.js"></script>
+<script src="../js/app.js"></script>
+<script src="../data/fake-data.js"></script>
+<script src="../js/jquery.dataTables.min.js"></script>
+<style>
+  html, body { overflow-y: auto !important; overflow-x: hidden !important; height: auto !important; }
+  .title-bar { overflow: visible !important; }
+  section.title-bar { min-height: 100vh; }
+  body { background:#f4f7f9; font-family:'Roboto',sans-serif; }
+  .relay-topbar { background:#1a1a2e;color:#00d4ff;text-align:center;padding:6px;font-size:12px;font-weight:700;letter-spacing:1px; }
+  .relay-topbar span { color:white;font-weight:400; }
+  .page-title { text-align:center;font-size:26px;font-weight:700;color:#333;margin:20px 0 14px; }
+  .content-area { padding:0 28px 40px; }
+  .panel-box { background:white;border-radius:8px;box-shadow:0 2px 10px rgba(0,0,0,0.07);padding:20px;margin-bottom:18px; }
+  .section-title { font-size:14px;font-weight:700;color:#555;text-align:center;margin-bottom:12px; }
+  .stat-row { display:flex;flex-wrap:wrap;gap:10px;margin-bottom:18px; }
+  .stat-card { flex:1;min-width:130px;border-radius:6px;padding:14px 14px;color:white;text-align:center; }
+  .stat-card.blue { background:#2471a3; }
+  .stat-card.yellow { background:#d4ac0d;color:#333; }
+  .stat-card .val { font-size:26px;font-weight:700;line-height:1; }
+  .stat-card .lbl { font-size:11px;margin-top:4px;opacity:0.9; }
+  .filter-box { background:white;border-radius:6px;border:1px solid #dee2e6;padding:14px;font-size:12px; }
+  .filter-title { font-weight:700;font-size:12px;color:#555;margin-bottom:6px;border-bottom:1px solid #eee;padding-bottom:4px; }
+  .filter-box label { display:block;color:#666;margin:2px 0; }
+  .as-of { background:#f8f9fa;border:1px solid #dee2e6;border-radius:4px;padding:10px;text-align:center;margin-bottom:10px; }
+  .map-grid { display:flex;gap:14px;flex-wrap:wrap;margin-bottom:18px; }
+  .map-item { flex:1;min-width:200px; }
+  .map-item .map-title { font-size:13px;font-weight:700;text-align:center;color:#444;margin-bottom:6px; }
+  .map-placeholder { background:#f0f4f8;border:2px dashed #cdd;border-radius:8px;height:180px;display:flex;align-items:center;justify-content:center;flex-direction:column;color:#888;font-size:12px; }
+  .map-placeholder i { font-size:30px;color:#27ae60;margin-bottom:6px; }
+  .map-legend { font-size:11px;text-align:center;margin-top:6px;color:#777; }
+  table.dataTable thead th { background:#f0f4f8;color:#333;font-size:12px; }
+  table.dataTable tbody td { font-size:12px; }
+  .training-type-badge { background:#f4c842;color:#333;border-radius:4px;padding:10px 14px;font-weight:700;font-size:14px;display:inline-block;margin-bottom:14px; }
+</style>
+</head>
+<body class="dashboard-page">
+<div class="relay-topbar">🔁 RELAY ENTERPRISE &nbsp;<span>| WHO India NPSU Demo Instance</span></div>
+<nav class="main-menu"><ul></ul></nav>
+
+<section class="title-bar">
+<div class="content-area">
+  <div id="demo-banner-wrap"></div>
+  <h2 class="page-title">FR Training</h2>
+
+  <div class="row">
+    <!-- Filter Sidebar -->
+    <div class="col-md-2">
+      <div class="as-of">
+        <div style="font-weight:700;font-size:13px;" id="asOf"></div>
+        <div style="font-size:11px;color:#888;">Latest date of WS</div>
+      </div>
+      <div class="filter-box">
+        <div class="filter-title">Date Range</div>
+        <div style="font-size:11px;color:#555;">10/31/2018 – 6/15/2023</div>
+        <div class="filter-title" style="margin-top:10px;">Modality of Training</div>
+        <label><input type="checkbox"> (Blank)</label>
+        <label><input type="checkbox"> Face to Face</label>
+        <label><input type="checkbox"> Virtual</label>
+        <div class="filter-title" style="margin-top:10px;">Region</div>
+        <label><input type="checkbox"> Bihar</label>
+        <label><input type="checkbox"> Central</label>
+        <label><input type="checkbox"> East</label>
+        <label><input type="checkbox"> North</label>
+        <label><input type="checkbox"> South</label>
+        <div class="filter-title" style="margin-top:10px;">State</div>
+        <div style="max-height:140px;overflow-y:auto;">
+          <label><input type="checkbox"> A&N ISLANDS</label>
+          <label><input type="checkbox"> ANDHRA PRADESH</label>
+          <label><input type="checkbox"> ARUNACHAL PR.</label>
+          <label><input type="checkbox"> ASSAM</label>
+          <label><input type="checkbox"> BIHAR</label>
+          <label><input type="checkbox"> CHANDIGARH</label>
+          <label><input type="checkbox"> DELHI</label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="col-md-10">
+
+      <!-- Training Type Badge + Stat Cards -->
+      <div>
+        <span class="training-type-badge">Fever and Rash Training</span>
+      </div>
+      <div class="stat-row">
+        <div class="stat-card blue">
+          <div class="val" id="statCommPct"></div>
+          <div class="lbl">% state communicated to districts</div>
+        </div>
+        <div class="stat-card blue">
+          <div class="val" id="stateWS"></div>
+          <div class="lbl">% State WS held</div>
+        </div>
+        <div class="stat-card blue">
+          <div class="val" id="participantsTrained"></div>
+          <div class="lbl"># Participants trained</div>
+        </div>
+        <div class="stat-card blue">
+          <div class="val" id="districtWSPct"></div>
+          <div class="lbl">% District WS held</div>
+        </div>
+        <div class="stat-card blue">
+          <div class="val" id="districtParticipants"></div>
+          <div class="lbl"># Participants Trained</div>
+        </div>
+      </div>
+
+      <!-- 3 India Maps -->
+      <div class="map-grid">
+        <div class="map-item">
+          <div class="map-title">State communication to districts</div>
+          <div class="map-placeholder">
+            <i class="fa fa-map"></i>
+            <span>India Map</span>
+            <span style="margin-top:4px;">● Conducted</span>
+          </div>
+          <div class="map-legend">● Conducted</div>
+        </div>
+        <div class="map-item">
+          <div class="map-title">State workshop held</div>
+          <div class="map-placeholder">
+            <i class="fa fa-map"></i>
+            <span>India Map</span>
+            <span style="margin-top:4px;">● Conducted</span>
+          </div>
+          <div class="map-legend">● Conducted</div>
+        </div>
+        <div class="map-item">
+          <div class="map-title">District workshop held</div>
+          <div class="map-placeholder">
+            <i class="fa fa-map"></i>
+            <span>India Map</span>
+            <span style="margin-top:4px;">● Conducted</span>
+          </div>
+          <div class="map-legend">● Conducted</div>
+        </div>
+      </div>
+
+      <!-- State Workshop Table -->
+      <div class="panel-box">
+        <div class="section-title">State-wise Training Summary</div>
+        <table id="trainingTable" class="table table-striped table-bordered" style="width:100%;font-size:12px;">
+          <thead>
+            <tr>
+              <th>State</th>
+              <th>State Workshops Held</th>
+              <th>District Workshops Held</th>
+              <th>Total Participants Trained</th>
+            </tr>
+          </thead>
+          <tbody id="trainingTableBody"></tbody>
+          <tfoot>
+            <tr style="font-weight:700;background:#eaf4fb;">
+              <td>Total</td>
+              <td id="totalStateWS"></td>
+              <td id="totalDistrictWS"></td>
+              <td id="totalParticipants"></td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+</section>
+
+<script src="../js/proton.js"></script>
+<script>
+$(function() {
+  renderSidebar('fr-training');
+  document.getElementById('demo-banner-wrap').innerHTML = DEMO_BANNER;
+  const d = RELAY_DATA.frTraining;
+
+  document.getElementById('asOf').textContent = d.asOfDate;
+  document.getElementById('statCommPct').textContent = d.stateCommunicationPct;
+  document.getElementById('stateWS').textContent = d.stateWSHeld;
+  document.getElementById('participantsTrained').textContent = fmt(d.participantsTrained);
+  document.getElementById('districtWSPct').textContent = d.districtWSHeldPct;
+  document.getElementById('districtParticipants').textContent = fmt(d.districtParticipants);
+
+  const tbody = document.getElementById('trainingTableBody');
+  let totStateWS = 0, totDistWS = 0, totPart = 0;
+  d.workshopTable.forEach(r => {
+    tbody.innerHTML += `<tr>
+      <td>${r.state}</td>
+      <td>${r.stateWS}</td>
+      <td>${fmt(r.districtWS)}</td>
+      <td>${fmt(r.participants)}</td>
+    </tr>`;
+    totStateWS += r.stateWS;
+    totDistWS += r.districtWS;
+    totPart += r.participants;
+  });
+  document.getElementById('totalStateWS').textContent = totStateWS;
+  document.getElementById('totalDistrictWS').textContent = fmt(totDistWS);
+  document.getElementById('totalParticipants').textContent = fmt(totPart);
+
+  $('#trainingTable').DataTable({ pageLength: 6, lengthChange: false, searching: false, info: false });
+});
+</script>
+</body>
+</html>

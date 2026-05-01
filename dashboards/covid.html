@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<head>
+<title>COVID National — WHO Relay Demo</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="../css/bootstrap.css">
+<link href="../css/style.css" rel="stylesheet"/>
+<link href="../css/font.css" rel="stylesheet"/>
+<link href="../css/font-awesome.css" rel="stylesheet">
+<link rel="stylesheet" href="../css/dataTables.bootstrap.min.css">
+<script src="../js/jquery2.0.3.min.js"></script>
+<script src="../js/modernizr.js"></script>
+<script src="../js/jquery.cookie.js"></script>
+<script src="../js/bootstrap.js"></script>
+<script src="../js/app.js"></script>
+<script src="../data/fake-data.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="../js/jquery.dataTables.min.js"></script>
+<style>
+  html, body { overflow-y: auto !important; overflow-x: hidden !important; height: auto !important; }
+  .title-bar { overflow: visible !important; }
+  section.title-bar { min-height: 100vh; }
+  body { background:#f4f7f9; font-family:'Roboto',sans-serif; }
+  .relay-topbar { background:#1a1a2e;color:#00d4ff;text-align:center;padding:6px;font-size:12px;font-weight:700;letter-spacing:1px; }
+  .relay-topbar span { color:white;font-weight:400; }
+  .page-title { text-align:center;font-size:26px;font-weight:700;color:#333;margin:20px 0 14px; }
+  .content-area { padding:0 28px 40px; }
+  .panel-box { background:white;border-radius:8px;box-shadow:0 2px 10px rgba(0,0,0,0.07);padding:20px;margin-bottom:18px; }
+  .section-title { font-size:14px;font-weight:700;color:#555;text-align:center;margin-bottom:10px; }
+  .stat-row { display:flex;flex-wrap:wrap;gap:10px;margin-bottom:18px; }
+  .stat-card { flex:1;min-width:120px;border-radius:6px;padding:14px 12px;color:white;text-align:center; }
+  .stat-card.blue { background:#2980b9; }
+  .stat-card.red  { background:#c0392b; }
+  .stat-card .val { font-size:22px;font-weight:700;line-height:1; }
+  .stat-card .lbl { font-size:11px;margin-top:4px;opacity:0.9; }
+  .india-flag { font-size:28px;margin-right:10px; }
+  .filter-box { background:white;border-radius:6px;border:1px solid #dee2e6;padding:14px;font-size:12px; }
+  .filter-title { font-weight:700;font-size:12px;color:#555;margin-bottom:6px;border-bottom:1px solid #eee;padding-bottom:4px; }
+  .filter-box label { display:block;color:#666;margin:2px 0; }
+  .as-of { background:#f8f9fa;border:1px solid #dee2e6;border-radius:4px;padding:10px;text-align:center;margin-bottom:10px;font-size:13px; }
+  table.dataTable thead th { background:#f0f4f8;color:#333;font-size:12px; }
+  table.dataTable tbody td { font-size:12px; }
+</style>
+</head>
+<body class="dashboard-page">
+<div class="relay-topbar">🔁 RELAY ENTERPRISE &nbsp;<span>| WHO India NPSU Demo Instance</span></div>
+<nav class="main-menu"><ul></ul></nav>
+
+<section class="title-bar">
+<div class="content-area">
+  <div id="demo-banner-wrap"></div>
+  <h2 class="page-title">COVID Cases | National Level</h2>
+
+  <div class="row">
+    <div class="col-md-2">
+      <div class="as-of">
+        <div style="font-weight:700;font-size:14px;" id="asOf"></div>
+        <div style="font-size:11px;color:#888;">As of Date</div>
+      </div>
+      <div class="filter-box">
+        <div class="filter-title">Date (weekly)</div>
+        <div style="max-height:100px;overflow-y:auto;">
+          <label><input type="checkbox" checked> 1/26/2020</label>
+          <label><input type="checkbox"> 2/2/2020</label>
+          <label><input type="checkbox"> 2/9/2020</label>
+          <label><input type="checkbox"> 2/16/2020</label>
+        </div>
+        <div class="filter-title" style="margin-top:10px;">Region</div>
+        <label><input type="checkbox"> Bihar</label>
+        <label><input type="checkbox"> Central</label>
+        <label><input type="checkbox"> East</label>
+        <label><input type="checkbox"> North</label>
+        <label><input type="checkbox"> South</label>
+        <div class="filter-title" style="margin-top:10px;">State Name</div>
+        <div style="max-height:150px;overflow-y:auto;">
+          <label><input type="checkbox"> A&N ISLANDS</label>
+          <label><input type="checkbox"> ANDHRA PRADESH</label>
+          <label><input type="checkbox"> ARUNACHAL PR.</label>
+          <label><input type="checkbox"> ASSAM</label>
+          <label><input type="checkbox"> BIHAR</label>
+          <label><input type="checkbox"> CHANDIGARH</label>
+          <label><input type="checkbox"> D&N HAVELI</label>
+          <label><input type="checkbox"> DELHI</label>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-10">
+      <!-- Stat Cards -->
+      <div style="display:flex;align-items:center;margin-bottom:12px;">
+        <span style="font-size:40px;">🇮🇳</span>
+        <span style="font-size:18px;font-weight:700;color:#333;margin-left:10px;">INDIA</span>
+      </div>
+      <div class="stat-row">
+        <div class="stat-card blue"><div class="val" id="confirmed"></div><div class="lbl">Confirmed Cases</div></div>
+        <div class="stat-card blue"><div class="val" id="perMillion"></div><div class="lbl">Cases per million</div></div>
+        <div class="stat-card blue"><div class="val" id="last7"></div><div class="lbl">Last 7 days Cases</div></div>
+        <div class="stat-card red"><div class="val" id="deaths"></div><div class="lbl">Total Deaths</div></div>
+        <div class="stat-card red"><div class="val" id="deathsMil"></div><div class="lbl">Deaths per million</div></div>
+        <div class="stat-card red"><div class="val" id="cfr"></div><div class="lbl">CFR</div></div>
+      </div>
+
+      <!-- 4 Charts in 2x2 grid -->
+      <div class="row">
+        <div class="col-md-6">
+          <div class="panel-box">
+            <div class="section-title">Daily COVID-19 Cases</div>
+            <canvas id="dailyCasesChart" height="130"></canvas>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="panel-box">
+            <div class="section-title">Daily COVID-19 Deaths</div>
+            <canvas id="dailyDeathsChart" height="130"></canvas>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="panel-box">
+            <div class="section-title">Cumulative COVID-19 Cases</div>
+            <canvas id="cumulCasesChart" height="130"></canvas>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="panel-box">
+            <div class="section-title">Cumulative COVID-19 Deaths</div>
+            <canvas id="cumulDeathsChart" height="130"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- State Table -->
+      <div class="panel-box">
+        <div class="section-title">State-wise Breakdown</div>
+        <table id="covidTable" class="table table-striped table-bordered" style="width:100%;font-size:12px;">
+          <thead>
+            <tr><th>State</th><th>Confirmed Cases</th><th>Deaths</th><th>CFR %</th></tr>
+          </thead>
+          <tbody id="covidTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+</div>
+</section>
+
+<script src="../js/proton.js"></script>
+<script>
+$(function() {
+  renderSidebar('covid');
+  document.getElementById('demo-banner-wrap').innerHTML = DEMO_BANNER;
+  const d = RELAY_DATA.covid;
+
+  document.getElementById('asOf').textContent = d.asOfDate;
+  document.getElementById('confirmed').textContent = fmt(d.confirmedCases);
+  document.getElementById('perMillion').textContent = fmt(d.casesPerMillion);
+  document.getElementById('last7').textContent = fmt(d.last7DaysCases);
+  document.getElementById('deaths').textContent = fmt(d.totalDeaths);
+  document.getElementById('deathsMil').textContent = fmt(d.deathsPerMillion);
+  document.getElementById('cfr').textContent = d.cfr;
+
+  const chartOpts = (color, label) => ({
+    responsive: true,
+    plugins: { legend: { display: false } },
+    scales: {
+      x: { title: { display: true, text: 'Date' }, ticks: { font: { size: 10 } } },
+      y: { title: { display: true, text: label } }
+    }
+  });
+
+  new Chart(document.getElementById('dailyCasesChart'), {
+    type: 'bar',
+    data: { labels: d.dailyCases.labels, datasets: [{ data: d.dailyCases.values, backgroundColor: '#2980b9', borderRadius: 2 }] },
+    options: chartOpts('#2980b9', 'Daily Cases')
+  });
+
+  new Chart(document.getElementById('dailyDeathsChart'), {
+    type: 'bar',
+    data: { labels: d.dailyDeaths.labels, datasets: [{ data: d.dailyDeaths.values, backgroundColor: '#c0392b', borderRadius: 2 }] },
+    options: chartOpts('#c0392b', 'Daily Deaths')
+  });
+
+  // Cumulative: running sum
+  const cumCases = d.dailyCases.values.reduce((acc, v, i) => { acc.push((acc[i-1]||0)+v); return acc; }, []);
+  const cumDeaths = d.dailyDeaths.values.reduce((acc, v, i) => { acc.push((acc[i-1]||0)+v); return acc; }, []);
+
+  new Chart(document.getElementById('cumulCasesChart'), {
+    type: 'line',
+    data: { labels: d.dailyCases.labels, datasets: [{ data: cumCases, borderColor: '#2980b9', backgroundColor: 'rgba(41,128,185,0.15)', fill: true, tension: 0.3, pointRadius: 3 }] },
+    options: chartOpts('#2980b9', 'Cumulative Cases')
+  });
+
+  new Chart(document.getElementById('cumulDeathsChart'), {
+    type: 'line',
+    data: { labels: d.dailyDeaths.labels, datasets: [{ data: cumDeaths, borderColor: '#c0392b', backgroundColor: 'rgba(192,57,43,0.15)', fill: true, tension: 0.3, pointRadius: 3 }] },
+    options: chartOpts('#c0392b', 'Cumulative Deaths')
+  });
+
+  // State table
+  const tbody = document.getElementById('covidTableBody');
+  d.stateTable.forEach(r => {
+    tbody.innerHTML += `<tr><td>${r.state}</td><td>${fmt(r.cases)}</td><td>${fmt(r.deaths)}</td><td>${r.cfr}</td></tr>`;
+  });
+  $('#covidTable').DataTable({ pageLength: 5, lengthChange: false, searching: false, info: false });
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<head>
+<title>HMIS Dashboard — WHO Relay Demo</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="../css/bootstrap.css">
+<link href="../css/style.css" rel="stylesheet"/>
+<link href="../css/font.css" rel="stylesheet"/>
+<link href="../css/font-awesome.css" rel="stylesheet">
+<script src="../js/jquery2.0.3.min.js"></script>
+<script src="../js/modernizr.js"></script>
+<script src="../js/jquery.cookie.js"></script>
+<script src="../js/bootstrap.js"></script>
+<script src="../js/app.js"></script>
+<script src="../data/fake-data.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  html, body { overflow-y: auto !important; overflow-x: hidden !important; height: auto !important; }
+  .title-bar { overflow: visible !important; }
+  section.title-bar { min-height: 100vh; }
+  body { background:#f4f7f9; font-family:'Roboto',sans-serif; }
+  .relay-topbar { background:#1a1a2e;color:#00d4ff;text-align:center;padding:6px;font-size:12px;font-weight:700;letter-spacing:1px; }
+  .relay-topbar span { color:white;font-weight:400; }
+  .page-title { text-align:center;font-size:26px;font-weight:700;color:#333;margin:20px 0 14px; }
+  .content-area { padding:0 28px 40px; }
+  .panel-box { background:white;border-radius:8px;box-shadow:0 2px 10px rgba(0,0,0,0.07);padding:20px;margin-bottom:18px; }
+  .section-title { font-size:15px;font-weight:700;color:#333;text-align:center;margin-bottom:14px;padding-bottom:8px;border-bottom:2px solid #009CDE; }
+
+  /* HMIS grid */
+  .hmis-header { background:#4a90d9;color:white;padding:8px 14px;border-radius:6px 6px 0 0;font-weight:700;font-size:14px;display:flex;justify-content:space-between;align-items:center; }
+  .hmis-grid-wrap { border:1px solid #d0dae8;border-radius:0 0 6px 6px;overflow:hidden; }
+  .hmis-summary { display:flex;gap:0; }
+  .hmis-summary-col { flex:1;border-right:1px solid #d0dae8;padding:12px;text-align:center; }
+  .hmis-summary-col:last-child { border-right:none; }
+  .hmis-summary-col .s-label { font-size:11px;color:#666;font-weight:600;margin-bottom:4px; }
+  .hmis-summary-col .s-val { font-size:18px;font-weight:700;color:#333; }
+  .vax-grid { border-top:1px solid #d0dae8; }
+  .vax-row { display:flex;border-bottom:1px solid #eee; }
+  .vax-row:last-child { border-bottom:none; }
+  .vax-cell {
+    flex:1;border-right:1px solid #eee;padding:10px 6px;text-align:center;font-size:12px;font-weight:600;color:#555;
+    min-height:56px;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  }
+  .vax-cell:last-child { border-right:none; }
+  .vax-pct-circle {
+    width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+    font-size:11px;font-weight:700;color:white;margin:2px auto 0;
+  }
+
+  /* Dropout row */
+  .dropout-row { display:flex;gap:10px;margin-top:14px;flex-wrap:wrap; }
+  .dropout-card {
+    flex:1;min-width:100px;background:#f8f9fa;border:1px solid #dee2e6;border-radius:6px;padding:12px;text-align:center;
+  }
+  .dropout-card .dval { font-size:20px;font-weight:700; }
+  .dropout-card .dval.neg { color:#c0392b; }
+  .dropout-card .dval.pos { color:#27ae60; }
+  .dropout-card .dlbl { font-size:10px;color:#888;margin-top:2px; }
+
+  /* Coverage chart */
+  .coverage-note { font-size:11px;color:#777;margin-bottom:8px;text-align:center; }
+  .fy-badge { background:#009CDE;color:white;border-radius:4px;padding:4px 12px;font-size:12px;font-weight:700;float:right;margin-top:-4px; }
+</style>
+</head>
+<body class="dashboard-page">
+<div class="relay-topbar">🔁 RELAY ENTERPRISE &nbsp;<span>| WHO India NPSU Demo Instance</span></div>
+<nav class="main-menu"><ul></ul></nav>
+
+<section class="title-bar">
+<div class="content-area">
+  <div id="demo-banner-wrap"></div>
+  <h2 class="page-title">HMIS Dashboard</h2>
+
+  <!-- Main HMIS Grid Panel -->
+  <div class="panel-box">
+    <div class="hmis-header">
+      <span>HMIS Dashboard</span>
+      <span style="font-size:12px;font-weight:400;" id="asOfSpan"></span>
+      <span class="fy-badge" id="fySpan"></span>
+    </div>
+
+    <!-- Summary Stats -->
+    <div class="hmis-grid-wrap">
+      <div class="hmis-summary">
+        <div class="hmis-summary-col">
+          <div class="s-label">Infant target</div>
+          <div class="s-val" id="infantTarget"></div>
+        </div>
+        <div class="hmis-summary-col">
+          <div class="s-label">Session planned</div>
+          <div class="s-val" id="sessionPlanned"></div>
+        </div>
+        <div class="hmis-summary-col">
+          <div class="s-label">Session held</div>
+          <div class="s-val" id="sessionHeld"></div>
+        </div>
+        <div class="hmis-summary-col">
+          <div class="s-label">% Session held</div>
+          <div class="s-val" id="sessionPct"></div>
+        </div>
+      </div>
+
+      <!-- Vaccine Grid -->
+      <div class="vax-grid">
+        <!-- Row 1 -->
+        <div class="vax-row">
+          <div class="vax-cell" style="background:#eaf4fb;">
+            <span>% FIC (9-11 Months)</span>
+          </div>
+          <div class="vax-cell">FIC
+            <div class="vax-pct-circle" style="background:#e67e22;" id="ficCircle"></div>
+          </div>
+          <div class="vax-cell">OPV-1<div class="vax-pct-circle" style="background:#bdc3c7;"></div></div>
+          <div class="vax-cell">Penta-1<div class="vax-pct-circle" style="background:#bdc3c7;"></div></div>
+          <div class="vax-cell">PCV-1<div class="vax-pct-circle" style="background:#bdc3c7;"></div></div>
+          <div class="vax-cell">Rota-1
+            <div class="vax-pct-circle" style="background:#e67e22;" id="rota1Circle"></div>
+          </div>
+          <div class="vax-cell">fIPV-1
+            <div class="vax-pct-circle" style="background:#e67e22;" id="fipv1Circle"></div>
+          </div>
+        </div>
+        <!-- Row 2 -->
+        <div class="vax-row">
+          <div class="vax-cell" style="background:#eaf4fb;">
+            <span>% FIC (9-11 Months)</span>
+          </div>
+          <div class="vax-cell">BCG<div class="vax-pct-circle" style="background:#bdc3c7;"></div></div>
+          <div class="vax-cell">OPV-2<div class="vax-pct-circle" style="background:#bdc3c7;"></div></div>
+          <div class="vax-cell">Penta-2<div class="vax-pct-circle" style="background:#bdc3c7;"></div></div>
+          <div class="vax-cell">PCV-2<div class="vax-pct-circle" style="background:#bdc3c7;"></div></div>
+          <div class="vax-cell">Rota-2<div class="vax-pct-circle" style="background:#bdc3c7;"></div></div>
+          <div class="vax-cell">fIPV-2<div class="vax-pct-circle" style="background:#bdc3c7;"></div></div>
+        </div>
+        <!-- Row 3 -->
+        <div class="vax-row">
+          <div class="vax-cell" style="background:#eaf4fb;"></div>
+          <div class="vax-cell">HepB-0<div class="vax-pct-circle" style="background:#bdc3c7;"></div></div>
+          <div class="vax-cell">OPV-3<div class="vax-pct-circle" style="background:#bdc3c7;"></div></div>
+          <div class="vax-cell">Penta-3<div class="vax-pct-circle" style="background:#bdc3c7;"></div></div>
+          <div class="vax-cell">PCV-B<div class="vax-pct-circle" style="background:#bdc3c7;"></div></div>
+          <div class="vax-cell">Rota-3<div class="vax-pct-circle" style="background:#bdc3c7;"></div></div>
+          <div class="vax-cell">fIPV-3<div class="vax-pct-circle" style="background:#bdc3c7;"></div></div>
+        </div>
+        <!-- Row 4 -->
+        <div class="vax-row">
+          <div class="vax-cell" style="background:#eaf4fb;"></div>
+          <div class="vax-cell"></div>
+          <div class="vax-cell">OPV-B<div class="vax-pct-circle" style="background:#bdc3c7;"></div></div>
+          <div class="vax-cell">DPT-B<div class="vax-pct-circle" style="background:#bdc3c7;"></div></div>
+          <div class="vax-cell">MR-1<div class="vax-pct-circle" style="background:#bdc3c7;"></div></div>
+          <div class="vax-cell">MR-2<div class="vax-pct-circle" style="background:#bdc3c7;"></div></div>
+          <div class="vax-cell"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dropout row -->
+    <div class="dropout-row" id="dropoutRow"></div>
+  </div>
+
+  <!-- State Coverage Chart -->
+  <div class="panel-box">
+    <div class="section-title">% Full Immunization (9-11 Months)</div>
+    <div class="coverage-note">Data as on August 2025 &nbsp;|&nbsp; Financial Year: <span id="fySpan2"></span></div>
+    <canvas id="coverageChart" height="65"></canvas>
+    <div style="display:flex;gap:14px;justify-content:center;margin-top:8px;flex-wrap:wrap;font-size:12px;">
+      <span><span style="display:inline-block;width:14px;height:14px;background:#27ae60;border-radius:2px;vertical-align:middle;margin-right:4px;"></span>≥ 90%</span>
+      <span><span style="display:inline-block;width:14px;height:14px;background:#f39c12;border-radius:2px;vertical-align:middle;margin-right:4px;"></span>85–90%</span>
+      <span><span style="display:inline-block;width:14px;height:14px;background:#e74c3c;border-radius:2px;vertical-align:middle;margin-right:4px;"></span>&lt; 85%</span>
+    </div>
+  </div>
+
+</div>
+</section>
+
+<script src="../js/proton.js"></script>
+<script>
+$(function() {
+  renderSidebar('hmis');
+  document.getElementById('demo-banner-wrap').innerHTML = DEMO_BANNER;
+
+  const d = RELAY_DATA.hmis;
+  document.getElementById('asOfSpan').textContent = 'Data as on ' + d.asOfDate;
+  document.getElementById('fySpan').textContent = d.financialYear;
+  document.getElementById('fySpan2').textContent = d.financialYear;
+  document.getElementById('infantTarget').textContent = fmt(d.infantTarget);
+  document.getElementById('sessionPlanned').textContent = fmt(d.sessionPlanned);
+  document.getElementById('sessionHeld').textContent = fmt(d.sessionHeld);
+  document.getElementById('sessionPct').textContent = d.sessionHeldPct;
+
+  document.getElementById('ficCircle').textContent = d.ficPct + '%';
+  document.getElementById('rota1Circle').textContent = d.vaccines['Rota-1'].pct + '%';
+  document.getElementById('fipv1Circle').textContent = d.vaccines['fIPV-1'].pct + '%';
+
+  // Dropout cards
+  const dr = document.getElementById('dropoutRow');
+  d.dropouts.forEach(item => {
+    const cls = item.val < 0 ? 'neg' : 'pos';
+    dr.innerHTML += `<div class="dropout-card">
+      <div class="dval ${cls}">${item.val}</div>
+      <div class="dlbl">${item.from} to ${item.to}</div>
+    </div>`;
+  });
+
+  // Coverage bar chart
+  const states = d.stateImmunization;
+  const colors = states.map(s => s.color === 'green' ? '#27ae60' : s.color === 'yellow' ? '#f39c12' : '#e74c3c');
+  new Chart(document.getElementById('coverageChart'), {
+    type: 'bar',
+    data: {
+      labels: states.map(s => s.state),
+      datasets: [{
+        data: states.map(s => s.pct),
+        backgroundColor: colors,
+        borderRadius: 2,
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { ticks: { font: { size: 9 }, maxRotation: 90, minRotation: 60 } },
+        y: { min: 0, max: 115, title: { display: true, text: '% FIC' } }
+      }
+    }
+  });
+});
+</script>
+</body>
+</html>

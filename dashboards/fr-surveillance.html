@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<head>
+<title>FR Surveillance — WHO Relay Demo</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="../css/bootstrap.css">
+<link href="../css/style.css" rel="stylesheet" type="text/css" />
+<link href="../css/font.css" rel="stylesheet"/>
+<link href="../css/font-awesome.css" rel="stylesheet">
+<link rel="stylesheet" href="../css/dataTables.bootstrap.min.css">
+<script src="../js/jquery2.0.3.min.js"></script>
+<script src="../js/modernizr.js"></script>
+<script src="../js/jquery.cookie.js"></script>
+<script src="../js/bootstrap.js"></script>
+<script src="../js/app.js"></script>
+<script src="../data/fake-data.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="../js/jquery.dataTables.min.js"></script>
+<style>
+  html, body { overflow-y: auto !important; overflow-x: hidden !important; height: auto !important; }
+  .title-bar { overflow: visible !important; }
+  section.title-bar { min-height: 100vh; }
+  body { background:#f4f7f9; font-family: 'Roboto', sans-serif; }
+  .relay-topbar { background:#1a1a2e;color:#00d4ff;text-align:center;padding:6px;font-size:12px;font-weight:700;letter-spacing:1px; }
+  .relay-topbar span { color:white;font-weight:400; }
+  .page-title { text-align:center;font-size:26px;font-weight:700;color:#333;margin:20px 0 14px;letter-spacing:0.5px; }
+  .content-area { padding:0 28px 40px; }
+  .stat-row { display:flex; flex-wrap:wrap; gap:10px; margin-bottom:18px; }
+  .stat-card {
+    flex:1; min-width:140px; border-radius:6px; padding:14px 18px; color:white; text-align:center;
+  }
+  .stat-card.red { background:#c0392b; }
+  .stat-card.blue { background:#2980b9; }
+  .stat-card .val { font-size:28px;font-weight:700;line-height:1; }
+  .stat-card .lbl { font-size:11px;margin-top:4px;opacity:0.9; }
+  .section-title { font-size:16px;font-weight:700;color:#333;text-align:center;margin:20px 0 12px; }
+  .panel-box { background:white;border-radius:8px;box-shadow:0 2px 10px rgba(0,0,0,0.07);padding:20px;margin-bottom:18px; }
+  .filter-sidebar {
+    background:white;border-radius:8px;box-shadow:0 2px 10px rgba(0,0,0,0.07);padding:16px;
+    font-size:12px;
+  }
+  .filter-sidebar .filter-title { font-weight:700;font-size:13px;color:#555;margin-bottom:8px;border-bottom:1px solid #eee;padding-bottom:6px; }
+  .filter-sidebar .filter-group { margin-bottom:12px; }
+  .filter-sidebar label { display:block;color:#666;margin:3px 0; }
+  .filter-sidebar input[type=checkbox] { margin-right:5px; }
+  .as-of { background:#f8f9fa;border:1px solid #dee2e6;border-radius:4px;padding:10px;text-align:center;margin-bottom:10px; }
+  .as-of .val { font-size:15px;font-weight:700;color:#333; }
+  .as-of .lbl { font-size:11px;color:#888; }
+  .legend { display:flex;gap:14px;justify-content:center;margin-top:8px;flex-wrap:wrap; }
+  .legend-item { display:flex;align-items:center;gap:5px;font-size:12px;color:#555; }
+  .legend-dot { width:12px;height:12px;border-radius:50%; }
+  table.dataTable thead th { background:#f0f4f8;color:#333;font-size:12px; }
+  table.dataTable tbody td { font-size:12px; }
+  .section-note { font-size:11px;color:#777;text-align:center;font-style:italic;margin-top:4px; }
+  .india-map-placeholder {
+    background: #f0f4f8;
+    border: 2px dashed #cdd;
+    border-radius: 8px;
+    height: 220px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-direction:column;
+    color:#888;
+    font-size:13px;
+  }
+  .india-map-placeholder i { font-size:40px;color:#009CDE;margin-bottom:8px; }
+</style>
+</head>
+<body class="dashboard-page">
+<div class="relay-topbar">🔁 RELAY ENTERPRISE &nbsp;<span>| WHO India NPSU Demo Instance</span></div>
+<nav class="main-menu"><ul></ul></nav>
+
+<section class="title-bar">
+<div class="content-area">
+
+  <!-- Demo Banner -->
+  <div id="demo-banner-wrap"></div>
+
+  <h2 class="page-title">FR Surveillance</h2>
+
+  <div class="row">
+    <!-- Left Filter Sidebar -->
+    <div class="col-md-2">
+      <div class="as-of">
+        <div class="val" id="asOfDate"></div>
+        <div class="lbl">As of Date</div>
+      </div>
+      <div class="filter-sidebar">
+        <div class="filter-title">Year of rash onset</div>
+        <div class="filter-group">
+          <label><input type="checkbox" checked> 2026</label>
+          <label><input type="checkbox" checked> 2025</label>
+          <label><input type="checkbox"> 2024</label>
+        </div>
+        <div class="filter-title">Region</div>
+        <div class="filter-group">
+          <label><input type="checkbox"> BIHAR</label>
+          <label><input type="checkbox"> CENTRAL</label>
+          <label><input type="checkbox"> EAST</label>
+          <label><input type="checkbox"> NORTH</label>
+          <label><input type="checkbox"> SOUTH</label>
+          <label><input type="checkbox"> UP</label>
+        </div>
+        <div class="filter-title">State</div>
+        <div class="filter-group" style="max-height:150px;overflow-y:auto;">
+          <label><input type="checkbox"> A&N ISLANDS</label>
+          <label><input type="checkbox"> ANDHRA PRADESH</label>
+          <label><input type="checkbox"> ARUNACHAL PR.</label>
+          <label><input type="checkbox"> ASSAM</label>
+          <label><input type="checkbox"> BIHAR</label>
+          <label><input type="checkbox"> CHANDIGARH</label>
+          <label><input type="checkbox"> DELHI</label>
+          <label><input type="checkbox"> GUJARAT</label>
+          <label><input type="checkbox"> HARYANA</label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="col-md-10">
+
+      <!-- Measles Stat Cards -->
+      <div class="stat-row">
+        <div class="stat-card red">
+          <div class="val" id="m-total"></div>
+          <div class="lbl">Measles Cases¹</div>
+        </div>
+        <div class="stat-card red">
+          <div class="val" id="m-lab"></div>
+          <div class="lbl">Lab confirmed Measles</div>
+        </div>
+        <div class="stat-card red">
+          <div class="val" id="m-epi"></div>
+          <div class="lbl">Epi-Linked Measles</div>
+        </div>
+        <div class="stat-card red">
+          <div class="val" id="m-clin"></div>
+          <div class="lbl">Measles Clinically Compatible</div>
+        </div>
+        <div class="stat-card red">
+          <div class="val" id="m-inc"></div>
+          <div class="lbl">Incidence (cases per million population)*</div>
+        </div>
+      </div>
+
+      <!-- Measles Epi-Curve -->
+      <div class="panel-box">
+        <div class="section-title">Measles Cases¹</div>
+        <canvas id="measlesChart" height="90"></canvas>
+        <div class="legend">
+          <span class="legend-item"><span class="legend-dot" style="background:#c0392b"></span>Measles Lab Confirmed</span>
+          <span class="legend-item"><span class="legend-dot" style="background:#e74c3c"></span>Epi-Linked Measles</span>
+          <span class="legend-item"><span class="legend-dot" style="background:#f1948a"></span>Measles Clinically Compatible</span>
+        </div>
+        <div class="section-note">¹ Measles cases include lab-confirmed, epi-linked, and clinically compatible measles cases.</div>
+      </div>
+
+      <!-- Rubella Stat Cards -->
+      <div class="stat-row">
+        <div class="stat-card blue">
+          <div class="val" id="r-total"></div>
+          <div class="lbl">Rubella Cases²</div>
+        </div>
+        <div class="stat-card blue">
+          <div class="val" id="r-lab"></div>
+          <div class="lbl">Rubella Lab Confirmed</div>
+        </div>
+        <div class="stat-card blue">
+          <div class="val" id="r-epi"></div>
+          <div class="lbl">Epi-Linked Rubella</div>
+        </div>
+        <div class="stat-card blue">
+          <div class="val" id="r-inc"></div>
+          <div class="lbl">Incidence (cases per million population)*</div>
+        </div>
+      </div>
+
+      <!-- Rubella Epi-Curve -->
+      <div class="panel-box">
+        <div class="section-title">Rubella Cases²</div>
+        <canvas id="rubellaChart" height="90"></canvas>
+        <div class="legend">
+          <span class="legend-item"><span class="legend-dot" style="background:#2980b9"></span>Rubella Lab Confirmed</span>
+          <span class="legend-item"><span class="legend-dot" style="background:#85c1e9"></span>Epi-Linked Rubella</span>
+        </div>
+        <div class="section-note">² Rubella cases include lab-confirmed, epi-linked and clinically compatible rubella cases.</div>
+      </div>
+
+      <!-- Map + Table Row -->
+      <div class="row">
+        <div class="col-md-5">
+          <div class="panel-box">
+            <div class="section-title">Measles cases¹</div>
+            <div class="india-map-placeholder">
+              <i class="fa fa-map"></i>
+              <span>India Choropleth Map</span>
+              <span style="font-size:11px;margin-top:4px;">(District-level case density)</span>
+              <div style="margin-top:10px;font-size:11px;text-align:left;">
+                <span style="color:#fff;background:#c0392b;padding:2px 8px;border-radius:3px;margin:2px;">51+</span>
+                <span style="color:#333;background:#f1948a;padding:2px 8px;border-radius:3px;margin:2px;">5–50</span>
+                <span style="color:#333;background:#f9ebea;padding:2px 8px;border-radius:3px;margin:2px;">1–4</span>
+                <span style="color:#333;background:#eee;padding:2px 8px;border-radius:3px;margin:2px;">0</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-7">
+          <div class="panel-box">
+            <div class="section-title">State-wise Breakdown</div>
+            <table id="stateTable" class="table table-striped table-bordered" style="width:100%;font-size:12px;">
+              <thead>
+                <tr>
+                  <th>State</th>
+                  <th>Measles Cases</th>
+                  <th>Rubella Cases</th>
+                </tr>
+              </thead>
+              <tbody id="stateTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <p class="section-note" style="margin-top:8px;">* because of seasonality, incidence should be interpreted by 12-month periods</p>
+
+    </div>
+  </div>
+
+</div>
+</section>
+
+<script src="../js/proton.js"></script>
+<script>
+$(function() {
+  renderSidebar('fr-surveillance');
+  document.getElementById('demo-banner-wrap').innerHTML = DEMO_BANNER;
+
+  const d = RELAY_DATA.frSurveillance;
+  document.getElementById('asOfDate').textContent = d.asOfDate;
+  document.getElementById('m-total').textContent = fmt(d.measles.totalCases);
+  document.getElementById('m-lab').textContent   = fmt(d.measles.labConfirmed);
+  document.getElementById('m-epi').textContent   = fmt(d.measles.epiLinked);
+  document.getElementById('m-clin').textContent  = fmt(d.measles.clinicallyCompatible);
+  document.getElementById('m-inc').textContent   = d.measles.incidence;
+  document.getElementById('r-total').textContent = fmt(d.rubella.totalCases);
+  document.getElementById('r-lab').textContent   = fmt(d.rubella.labConfirmed);
+  document.getElementById('r-epi').textContent   = fmt(d.rubella.epiLinked);
+  document.getElementById('r-inc').textContent   = d.rubella.incidence;
+
+  // Measles chart
+  new Chart(document.getElementById('measlesChart'), {
+    type: 'bar',
+    data: {
+      labels: d.epiCurve.labels,
+      datasets: [
+        { label:'Measles Lab Confirmed', data: d.epiCurve.measlesLab, backgroundColor:'#c0392b', stack:'m' },
+        { label:'Epi-Linked Measles',    data: d.epiCurve.measlesEpi, backgroundColor:'#e74c3c', stack:'m' },
+        { label:'Clinically Compatible', data: d.epiCurve.measlesClinical, backgroundColor:'#f1948a', stack:'m' },
+      ]
+    },
+    options: {
+      responsive:true, plugins:{legend:{display:false}},
+      scales:{ x:{stacked:true,title:{display:true,text:'Jan 2025 – Dec 2025 *'}}, y:{stacked:true,title:{display:true,text:'Total Measles cases'}} }
+    }
+  });
+
+  // Rubella chart
+  new Chart(document.getElementById('rubellaChart'), {
+    type: 'bar',
+    data: {
+      labels: d.epiCurve.labels,
+      datasets: [
+        { label:'Rubella Lab Confirmed', data: d.epiCurve.rubellaLab, backgroundColor:'#2980b9', stack:'r' },
+        { label:'Epi-Linked Rubella',    data: d.epiCurve.rubellaEpi, backgroundColor:'#85c1e9', stack:'r' },
+      ]
+    },
+    options: {
+      responsive:true, plugins:{legend:{display:false}},
+      scales:{ x:{stacked:true,title:{display:true,text:'Jan 2025 – Dec 2025 *'}}, y:{stacked:true,title:{display:true,text:'Total Rubella cases'}} }
+    }
+  });
+
+  // State table
+  const tbody = document.getElementById('stateTableBody');
+  d.stateTable.forEach(r => {
+    tbody.innerHTML += `<tr><td>${r.state}</td><td>${fmt(r.measles)}</td><td>${fmt(r.rubella)}</td></tr>`;
+  });
+  $('#stateTable').DataTable({ pageLength:5, lengthChange:false, searching:false, info:false });
+});
+</script>
+</body>
+</html>

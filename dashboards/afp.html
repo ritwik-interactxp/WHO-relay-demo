@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<head>
+<title>AFP Surveillance — WHO Relay Demo</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="../css/bootstrap.css">
+<link href="../css/style.css" rel="stylesheet"/>
+<link href="../css/font.css" rel="stylesheet"/>
+<link href="../css/font-awesome.css" rel="stylesheet">
+<link rel="stylesheet" href="../css/dataTables.bootstrap.min.css">
+<script src="../js/jquery2.0.3.min.js"></script>
+<script src="../js/modernizr.js"></script>
+<script src="../js/jquery.cookie.js"></script>
+<script src="../js/bootstrap.js"></script>
+<script src="../js/app.js"></script>
+<script src="../data/fake-data.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="../js/jquery.dataTables.min.js"></script>
+<style>
+  html, body { overflow-y: auto !important; overflow-x: hidden !important; height: auto !important; }
+  .title-bar { overflow: visible !important; }
+  section.title-bar { min-height: 100vh; }
+  body { background:#f4f7f9; font-family:'Roboto',sans-serif; }
+  .relay-topbar { background:#1a1a2e;color:#00d4ff;text-align:center;padding:6px;font-size:12px;font-weight:700;letter-spacing:1px; }
+  .relay-topbar span { color:white;font-weight:400; }
+  .page-title { text-align:center;font-size:26px;font-weight:700;color:#333;margin:20px 0 14px; }
+  .content-area { padding:0 28px 40px; }
+  .panel-box { background:white;border-radius:8px;box-shadow:0 2px 10px rgba(0,0,0,0.07);padding:20px;margin-bottom:18px; }
+  .section-title { font-size:14px;font-weight:700;color:#555;text-align:center;margin-bottom:10px; }
+  .stat-row { display:flex;flex-wrap:wrap;gap:10px;margin-bottom:18px; }
+  .stat-card { flex:1;min-width:140px;border-radius:6px;padding:14px 18px;color:white;text-align:center; }
+  .stat-card.green { background:#27ae60; }
+  .stat-card.orange { background:#e67e22; }
+  .stat-card .val { font-size:28px;font-weight:700;line-height:1; }
+  .stat-card .lbl { font-size:11px;margin-top:4px;opacity:0.9; }
+  .filter-box { background:white;border-radius:6px;border:1px solid #dee2e6;padding:14px;font-size:12px; }
+  .filter-title { font-weight:700;font-size:12px;color:#555;margin-bottom:6px;border-bottom:1px solid #eee;padding-bottom:4px; }
+  .filter-box label { display:block;color:#666;margin:2px 0; }
+  .as-of { background:#f8f9fa;border:1px solid #dee2e6;border-radius:4px;padding:10px;text-align:center;margin-bottom:10px;font-size:13px; }
+  .legend { display:flex;gap:14px;justify-content:center;margin-top:8px;flex-wrap:wrap; }
+  .legend-item { display:flex;align-items:center;gap:5px;font-size:12px;color:#555; }
+  .legend-dot { width:12px;height:12px;border-radius:50%; }
+  table.dataTable thead th { background:#f0f4f8;color:#333;font-size:12px; }
+  table.dataTable tbody td { font-size:12px; }
+  .def-box { background:#f8f9fa;border:1px solid #dee2e6;border-radius:6px;padding:16px;font-size:13px;margin-bottom:18px; }
+  .def-box h5 { font-weight:700;color:#333;margin-bottom:6px; }
+</style>
+</head>
+<body class="dashboard-page">
+<div class="relay-topbar">🔁 RELAY ENTERPRISE &nbsp;<span>| WHO India NPSU Demo Instance</span></div>
+<nav class="main-menu"><ul></ul></nav>
+
+<section class="title-bar">
+<div class="content-area">
+  <div id="demo-banner-wrap"></div>
+  <h2 class="page-title">AFP Surveillance 2020–25</h2>
+
+  <div class="row">
+    <div class="col-md-2">
+      <div class="as-of">
+        <div style="font-weight:700;font-size:14px;" id="asOf"></div>
+        <div style="font-size:11px;color:#888;">As of Date</div>
+      </div>
+      <div class="filter-box">
+        <div class="filter-title">Year</div>
+        <label><input type="checkbox" checked> 2025</label>
+        <label><input type="checkbox" checked> 2024</label>
+        <label><input type="checkbox"> 2023</label>
+        <label><input type="checkbox"> 2022</label>
+        <div class="filter-title" style="margin-top:10px;">Region</div>
+        <label><input type="checkbox"> BIHAR</label>
+        <label><input type="checkbox"> CENTRAL</label>
+        <label><input type="checkbox"> EAST</label>
+        <label><input type="checkbox"> NORTH</label>
+        <label><input type="checkbox"> SOUTH</label>
+        <label><input type="checkbox"> UP</label>
+        <div class="filter-title" style="margin-top:10px;">State</div>
+        <div style="max-height:150px;overflow-y:auto;">
+          <label><input type="checkbox"> ANDHRA PRADESH</label>
+          <label><input type="checkbox"> ASSAM</label>
+          <label><input type="checkbox"> BIHAR</label>
+          <label><input type="checkbox"> DELHI</label>
+          <label><input type="checkbox"> GUJARAT</label>
+          <label><input type="checkbox"> HARYANA</label>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-10">
+      <!-- Stat Cards -->
+      <div class="stat-row">
+        <div class="stat-card green"><div class="val" id="totalAFP"></div><div class="lbl">Total AFP Cases</div></div>
+        <div class="stat-card green"><div class="val" id="adequateStools"></div><div class="lbl">Adequate Stool Specimens</div></div>
+        <div class="stat-card orange"><div class="val" id="npafpRate"></div><div class="lbl">NPAFP Rate (per 100,000 &lt;15 yrs)</div></div>
+        <div class="stat-card orange" style="background:#c0392b;"><div class="val" id="hotCases"></div><div class="lbl">Hot AFP Cases</div></div>
+      </div>
+
+      <!-- Epi Curve -->
+      <div class="panel-box">
+        <div class="section-title">AFP Case Epi-Curve (Jan–Dec 2025)</div>
+        <canvas id="afpChart" height="90"></canvas>
+        <div class="legend">
+          <span class="legend-item"><span class="legend-dot" style="background:#27ae60"></span>Adequate Specimens</span>
+          <span class="legend-item"><span class="legend-dot" style="background:#e74c3c"></span>Inadequate Specimens</span>
+        </div>
+      </div>
+
+      <!-- Map + Table -->
+      <div class="row">
+        <div class="col-md-5">
+          <div class="panel-box">
+            <div class="section-title">AFP Case Distribution</div>
+            <div style="background:#f0f4f8;border:2px dashed #cdd;border-radius:8px;height:200px;display:flex;align-items:center;justify-content:center;flex-direction:column;color:#888;font-size:13px;">
+              <i class="fa fa-map" style="font-size:36px;color:#009CDE;margin-bottom:8px;"></i>
+              <span>India Choropleth Map</span>
+              <span style="font-size:11px;margin-top:4px;">(District AFP density)</span>
+            </div>
+          </div>
+          <!-- Case definition -->
+          <div class="def-box">
+            <h5>AFP Case Definition:</h5>
+            <p>Any child under 15 years of age with acute flaccid paralysis, or any person of any age in whom polio is suspected, is an AFP case and must be reported immediately.</p>
+            <br>
+            <h5>Adequate Stool Specimens:</h5>
+            <p>Two stool specimens collected 24–48 hours apart, within 14 days of paralysis onset, transported at 2–8°C, arriving in good condition.</p>
+          </div>
+        </div>
+        <div class="col-md-7">
+          <div class="panel-box">
+            <div class="section-title">State-wise AFP Summary</div>
+            <table id="afpTable" class="table table-striped table-bordered" style="width:100%;font-size:12px;">
+              <thead><tr><th>State</th><th>AFP Cases</th><th>NPAFP Rate</th><th>Adequate %</th></tr></thead>
+              <tbody id="afpTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</section>
+
+<script src="../js/proton.js"></script>
+<script>
+$(function() {
+  renderSidebar('afp');
+  document.getElementById('demo-banner-wrap').innerHTML = DEMO_BANNER;
+  const d = RELAY_DATA.afp;
+
+  document.getElementById('asOf').textContent = d.asOfDate;
+  document.getElementById('totalAFP').textContent = fmt(d.totalAFP);
+  document.getElementById('adequateStools').textContent = fmt(d.adequateStools);
+  document.getElementById('npafpRate').textContent = d.npafpRate;
+  document.getElementById('hotCases').textContent = d.hotCases;
+
+  new Chart(document.getElementById('afpChart'), {
+    type: 'bar',
+    data: {
+      labels: d.epiCurve.labels,
+      datasets: [
+        { label: 'Adequate', data: d.epiCurve.adequate, backgroundColor: '#27ae60', stack: 'a' },
+        { label: 'Inadequate', data: d.epiCurve.inadequate, backgroundColor: '#e74c3c', stack: 'a' },
+      ]
+    },
+    options: {
+      responsive: true, plugins: { legend: { display: false } },
+      scales: { x: { stacked: true }, y: { stacked: true, title: { display: true, text: 'AFP Cases' } } }
+    }
+  });
+
+  const tbody = document.getElementById('afpTableBody');
+  d.stateTable.forEach(r => {
+    tbody.innerHTML += `<tr><td>${r.state}</td><td>${fmt(r.afp)}</td><td>${r.npafp}</td><td>${r.adequate}</td></tr>`;
+  });
+  $('#afpTable').DataTable({ pageLength: 5, lengthChange: false, searching: false, info: false });
+});
+</script>
+</body>
+</html>

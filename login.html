@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>WHO INDIA — Relay Demo</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" href="css/bootstrap.css">
+<link href="css/style.css" rel="stylesheet" type="text/css" />
+<link href="css/font-awesome.css" rel="stylesheet">
+<link href="css/font.css" rel="stylesheet">
+<script src="js/jquery2.0.3.min.js"></script>
+<style>
+  html, body { overflow-y: auto !important; overflow-x: hidden !important; height: auto !important; }
+  .title-bar { overflow: visible !important; }
+  section.title-bar { min-height: 100vh; }
+  body { background: #f4f7f9; font-family: 'Roboto', sans-serif; }
+  .login-wrap {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+  }
+  .login-box {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+    padding: 48px 48px 36px;
+    width: 400px;
+    max-width: 95vw;
+  }
+  .who-header {
+    text-align: center;
+    margin-bottom: 28px;
+  }
+  .who-header .who-logo {
+    width: 80px;
+    height: 80px;
+    background: #009CDE;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 14px;
+  }
+  .who-header .who-logo i {
+    font-size: 38px;
+    color: white;
+  }
+  .who-header h1 {
+    color: #009CDE;
+    font-size: 26px;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+  .who-header p {
+    color: tomato;
+    font-size: 13px;
+    font-weight: 600;
+  }
+  .relay-badge {
+    display: inline-block;
+    background: #1a1a2e;
+    color: #00d4ff;
+    border-radius: 20px;
+    padding: 4px 14px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+  }
+  .form-control {
+    border-radius: 4px;
+    height: 42px;
+    font-size: 14px;
+  }
+  .btn-who {
+    background: #009CDE;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    width: 100%;
+    height: 44px;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    transition: background 0.2s;
+  }
+  .btn-who:hover { background: #007ab5; color: white; }
+  .demo-note {
+    background: #fff3cd;
+    border: 1px solid #ffc107;
+    border-radius: 6px;
+    padding: 8px 14px;
+    font-size: 12px;
+    color: #856404;
+    text-align: center;
+    margin-top: 16px;
+  }
+  .footer-note {
+    color: #999;
+    font-size: 12px;
+    text-align: center;
+    margin-top: 24px;
+  }
+  .relay-powered {
+    margin-top: 32px;
+    text-align: center;
+  }
+  .relay-powered span {
+    font-size: 13px;
+    color: #666;
+  }
+  .relay-powered strong {
+    color: #1a1a2e;
+    font-size: 15px;
+  }
+</style>
+</head>
+<body>
+<div class="login-wrap">
+  <div class="login-box">
+    <div class="who-header">
+      <div class="who-logo">
+        <i class="fa fa-globe"></i>
+      </div>
+      <div><span class="relay-badge">🔁 RELAY ENTERPRISE DEMO</span></div>
+      <h1>WIN-IMM</h1>
+      <p>WHO India NPSU Information Management Module</p>
+    </div>
+
+    <div style="margin-bottom:20px;">
+      <label style="font-size:13px;color:#555;font-weight:600;">Username</label>
+      <input type="text" class="form-control" id="username" placeholder="Enter username" value="who.demo" />
+    </div>
+    <div style="margin-bottom:24px;">
+      <label style="font-size:13px;color:#555;font-weight:600;">Password</label>
+      <input type="password" class="form-control" id="password" placeholder="Enter password" value="demo2026" />
+    </div>
+    <button class="btn btn-who" onclick="doLogin()">
+      <i class="fa fa-sign-in"></i> &nbsp;Sign In
+    </button>
+
+    <div class="demo-note">
+      ⚠️ <strong>Demo Instance</strong> — All data is simulated for demonstration purposes only
+    </div>
+
+    <div class="relay-powered">
+      <span>Powered by &nbsp;</span><strong>Relay</strong><span>&nbsp; for WHO Enterprise</span>
+    </div>
+  </div>
+  <div class="footer-note">
+    Version : 4.7 | Relay Enterprise Demo | &copy; 2026 WHO India NPSU
+  </div>
+</div>
+
+<script>
+function doLogin() {
+  const u = document.getElementById('username').value;
+  const p = document.getElementById('password').value;
+  if (!u || !p) { alert('Please enter credentials'); return; }
+  // Any credentials work for demo
+  window.location.href = 'index.html';
+}
+document.getElementById('password').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') doLogin();
+});
+</script>
+</body>
+</html>
